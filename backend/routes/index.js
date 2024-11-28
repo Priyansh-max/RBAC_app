@@ -12,6 +12,8 @@ const adminRouter = require("./admin")
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const secret = process.env.JWT_SECRET
+
 router.use('/users' , userRouter)
 router.use('/admin' , adminRouter)
 
@@ -61,10 +63,6 @@ router.post('/login' , async(req , res) => {
         });
 
     }catch(error){
-        if (error instanceof z.ZodError) {
-            const errorMessages = error.errors.map(err => err.message);
-            return res.status(400).json({ error: errorMessages.join(', ') });
-        }
         res.status(500).json({ error: error.message });
     }  
 })
@@ -110,16 +108,13 @@ router.post('/signup' , async(req , res) => {
         });
 
     }catch(error){
-        if (error instanceof z.ZodError) {
-            const errorMessages = error.errors.map(err => err.message);
-            return res.status(400).json({ error: errorMessages.join(', ') });
-        }
         res.status(500).json({ error: error.message });
     }
 })
 
 router.post('/send-verification-email', async (req, res) => {
     try{
+        const { email }  = req.body
         const verificationCode = crypto.randomInt(1000, 9999);
         verificationCodes.set(email, verificationCode);
 
@@ -144,11 +139,11 @@ router.post('/verify-code', (req, res) => {
         if (!email || !code) {
             return res.status(400).json({ error: 'Email and code are required' });
         }
-    
         const storedCode = verificationCodes.get(email);
     
         if (storedCode && storedCode.toString() === code) {
             verificationCodes.delete(email);
+
             return res.status(200).json({ message: 'Email verified successfully' });
         }
 

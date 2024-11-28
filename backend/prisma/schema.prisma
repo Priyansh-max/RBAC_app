@@ -21,7 +21,7 @@ enum Role {
 model User {
   id       String   @id @default(uuid())
   createdAt   DateTime @default(now())
-  email    String
+  email    String   @unique
   password  String
   firstname String
   lastname  String
@@ -37,5 +37,5 @@ model Notice {
   content   String
   userId    String
   user      User @relation(fields: [userId] , references: [id])
-  
+
 }
