@@ -1,15 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Search, ChevronDown, LogOut, Settings } from 'lucide-react';
+import { Search, ChevronDown, LogOut, Settings , UserCircleIcon} from 'lucide-react';
 import { MdOutlineSecurity } from "react-icons/md"
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios"
 
-function Topbar( {handleSendNoticeClick } ) {
+function Topbar( {handleSendNoticeClick , userdata , Role , handleClickEditModerator} ) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [Role, setRole] = useState("ADMIN");
     const navigate = useNavigate()
 
     const handleLogout = () => {
@@ -43,8 +41,9 @@ function Topbar( {handleSendNoticeClick } ) {
                         </div>
                     </div>
 
-                    {/* Conditionally render button if Role is ADMIN */}
-                    {Role === "ADMIN" && (
+                    {/* Conditionally render button if Role is not USER */}
+
+                    {Role !== "USER" && (
                         <button onClick={handleSendNoticeClick} className="bg-orange-500 text-white font-semibold text-sm rounded h-[35px] py-1 hover:bg-orange-700 transition-all duration-300 ease-out-in px-4">
                             Send Notice
                         </button>
@@ -56,13 +55,9 @@ function Topbar( {handleSendNoticeClick } ) {
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className="flex items-center space-x-3 focus:outline-none"
                         >
-                            <img
-                                className="h-8 w-8 rounded-full object-cover"
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                alt="User avatar"
-                            />
+                            <UserCircleIcon className="h-8 w-8 text-gray-500" />
                             <div className="flex items-center">
-                                <span className="text-sm font-medium text-gray-700">Hello</span>
+                                <span className="text-sm font-medium text-gray-700">{userdata.firstname} {userdata.lastname}</span>
                                 <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
                             </div>
                         </button>
@@ -83,19 +78,22 @@ function Topbar( {handleSendNoticeClick } ) {
                                 )}
                                 {Role === "ADMIN" && (
                                     <>
-                                        <Link
-                                            to="/edit-moderators"
-                                            className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 items-center"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                        >
-                                            <Settings className="mr-3 h-4 w-4" />
-                                            Edit Moderators
-                                        </Link>
+                                    <button
+                                        onClick={() => {
+                                        setIsDropdownOpen(false);
+                                        handleClickEditModerator();
+                                        }}
+                                        className="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 items-center"
+                                    >
+                                        <Settings className="mr-3 h-4 w-4" />
+                                        Edit Moderators
+                                    </button>
                                     </>
                                 )}
                                 <button
                                     onClick={() => {
                                         setIsDropdownOpen(false);
+                                        handleLogout()
                                         // Add logout logic here
                                     }}
                                     className="flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 items-center"

@@ -1,17 +1,57 @@
 // eslint-disable-next-line no-unused-vars
 import React , { useState }from "react";
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { Lock, Mail } from 'lucide-react';
 import InputField from "../components/InputField";
 import Button from "../components/Button";
-
+import axios from "axios"
 
 function Login(){
     const [isLoading, setIsLoading] = useState(false);
+    const [email , setEmail] = useState("");
+    const [password , setPassword] = useState("");
+    const [Error , setError] = useState({});
+    const navigate = useNavigate();
     
-    const handleSubmit = () => {
-        setIsLoading(true);
-        setIsLoading(false);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if(email == "" || password == ""){
+            setError({
+                email : email === "" ? "Username is required*" : "",
+                password : password === "" ? "Password is required*" : "",
+            })
+        }
+        else{
+            setError({})
+            try{
+                const response = await axios.post("http://localhost:3000/api/v1/login", {
+                    email,
+                    password
+                }) 
+    
+                if(response.status == 200){
+                    localStorage.setItem("token", response.data.token);
+                    setIsLoading(false);
+                    if(response.data.user.role == "USER"){
+                        navigate("/userdashboard");
+                    }
+                    else{
+                        navigate("/admindashboard")
+                    }
+                }
+    
+                else{
+                    setError({message : response.data.error})
+                }
+    
+            }catch(error){
+                if (error.response && error.response.data.message) {
+                    setError({ message: error.response.data.message });
+                } else {
+                    setError({ message: "Something went wrong. Please try again later." });
+                }
+            }
+        }       
     }
 
     return(
@@ -41,15 +81,19 @@ function Login(){
                             text="Email address"
                             type="email"
                             required
+                            error={Error.email}
                             icon={<Mail className="h-5 w-5 text-gray-400" />}
                             inputplaceholder="Enter your email"
+                            onChange={(e) => setEmail(e.target.value)}
                         />
 
                         <InputField
                             text="Password"
                             type="password"
                             required
+                            error={Error.password}
                             inputplaceholder="Enter your password"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
 
                         <div className="flex items-center justify-between">
@@ -82,9 +126,10 @@ function Login(){
                             text="Submit"
                             className="w-full"
                             isLoading={isLoading}
+                            onClick={handleSubmit}
                             >
-                            Sign in
                         </Button>
+                        {Error.message && <p className="italic text-center text-red-500 text-xs">{Error.message}</p>}
                     </form>
                 </div>
             </div>

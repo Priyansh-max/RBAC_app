@@ -6,17 +6,59 @@ import { useNavigate } from 'react-router-dom';
 
 function UserDashboard(){
     const [notices, setNotices] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem("token");
+
+                if (!token) {
+                    navigate("/login");
+                    return;
+                }
+
+                const noticesResponse = await axios.get("http://localhost:3000/api/v1/users/notices", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const userResponse = await axios.get("http://localhost:3000/api/v1/users/userdata", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                setNotices(noticesResponse.data.notices);
+                setUserData(userResponse.data.user);
+
+                console.log(userResponse.data.user);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setError(error.response?.data?.error || "Failed to fetch data.");
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [navigate]); 
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
-        <Topbar />
+        <Topbar userdata={userData} Role="USER"/>
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg p-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Welcome back, Priyansh!</h1>
-            <p className="mt-2 text-gray-600">This is your dashboard content.</p>
+            <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {userData.firstname}  {userData.lastname}</h1>
+            <p className="mt-2 text-gray-600">All the notices from the admin will be displayed here.</p>
           </div>
           <div className="mt-6 bg-white shadow rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-gray-900">
