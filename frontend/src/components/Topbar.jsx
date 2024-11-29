@@ -31,10 +31,9 @@ function Topbar( {handleSendNoticeClick , userdata , Role , handleClickEditModer
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
-                        <Link to="/dashboard" className="flex items-center">
-                            <MdOutlineSecurity className="h-8 w-8 text-blue-600" />
-                            <span className="ml-2 text-xl font-bold text-gray-900">NoticeBoard</span>
-                        </Link>
+
+                        <MdOutlineSecurity className="h-8 w-8 text-blue-600" />
+                        <span className="mx-2 text-xl font-bold text-gray-900">NoticeBoard</span>
                     </div>
 
                     {/* Search Bar */}
