@@ -2,6 +2,7 @@ const express = require("express")
 const app = express();
 const rootRouter = require('./routes/index')
 const cors = require('cors')
+require('dotenv').config();
 
 app.use(cors()); // Enables CORS for all origins
 app.use(express.json());
