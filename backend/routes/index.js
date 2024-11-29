@@ -36,13 +36,13 @@ router.post('/login' , async(req , res) => {
 
         //check for email
         if (!user) {
-          return res.status(400).json({ error: 'User email id is incorrect' });
+          return res.status(400).json({ message : 'User email id is incorrect' });
         }
 
         //check for password 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-          return res.status(400).json({ error: 'Password is incorrect' });
+          return res.status(400).json({ message : 'Password is incorrect' });
         }
 
         const userid = user.id;
