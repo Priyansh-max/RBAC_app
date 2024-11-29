@@ -26,57 +26,33 @@ function AdminDashboard() {
     const [role, setRole] = useState('');
 
     useEffect(() => {
-        console.log("useEffect called");  // Confirm if useEffect is triggered
-        
-        const fetchData1 = async () => {
+        const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
-                console.log("Token retrieved:", token);  // Log token for debugging
-
+    
                 if (!token) {
-                    console.log("Token not found, redirecting to login.");
                     navigate("/login");
                     return;
                 }
-                
+    
                 const noticesResponse = await axios.get("http://localhost:3000/api/v1/users/notices", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+    
                 const userResponse = await axios.get("http://localhost:3000/api/v1/users/userdata", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
-                console.log("Notices:", noticesResponse.data);
-                console.log("User Data:", userResponse.data);
-
-                setNotices(noticesResponse.data.notices);
-                setUserData(userResponse.data.user);
-
-                setIsLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setError(error.response?.data?.error || "Failed to fetch data.");
-                setIsLoading(false);
-            }
-        };
-
-        fetchData1();
-    }, []);
-
-    useEffect(() => {
-        const fetchuserData = async () => {
-            try {
-                const token = localStorage.getItem("token");
-
-                if (!token) {
-                    navigate("/login");
-                    return;
-                }
+    
+                // Uncomment and modify if you want to fetch all users
                 const allUserResponse = await axios.get("http://localhost:3000/api/v1/admin/user-data", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
+    
+                setNotices(noticesResponse.data.notices);
+                setUserData(userResponse.data.user);
                 setAllUsers(allUserResponse.data.users);
+    
+                console.log(userResponse.data.user);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -84,9 +60,9 @@ function AdminDashboard() {
                 setIsLoading(false);
             }
         };
-
-        fetchuserData();
-    }, []); 
+    
+        fetchData();
+    }, [navigate]); 
 
 //---------------------edit moderator overlay----------------------------------
   const handleClickEditModerator = () => {
@@ -137,7 +113,7 @@ function AdminDashboard() {
         })
 
         if(response.status == 201){
-            isOverlayModerator(false);
+            setIsOverlayModerator(false);
         }
     }
     catch(error){
@@ -174,7 +150,7 @@ function AdminDashboard() {
         })
 
         if(response.status == 201){
-            isOverlayVisible(false);
+            setIsOverlayVisible(false);
         }
 
     }catch(error){

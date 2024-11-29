@@ -12,6 +12,7 @@ function UserDashboard(){
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("wqfuwqgfiuqwuqwb")
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
