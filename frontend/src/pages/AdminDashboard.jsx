@@ -35,16 +35,16 @@ function AdminDashboard() {
                     return;
                 }
     
-                const noticesResponse = await axios.get("http://localhost:3000/api/v1/users/notices", {
+                const noticesResponse = await axios.get("https://rbac-app-9epa.onrender.com/api/v1/users/notices", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
     
-                const userResponse = await axios.get("http://localhost:3000/api/v1/users/userdata", {
+                const userResponse = await axios.get("https://rbac-app-9epa.onrender.com/api/v1/users/userdata", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
     
                 // Uncomment and modify if you want to fetch all users
-                const allUserResponse = await axios.get("http://localhost:3000/api/v1/admin/user-data", {
+                const allUserResponse = await axios.get("https://rbac-app-9epa.onrender.com/api/v1/admin/user-data", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
     
@@ -104,7 +104,7 @@ function AdminDashboard() {
 
         const token = localStorage.getItem("token");
 
-        const response = await axios.put("http://localhost:3000/api/v1/admin/edit-moderator" ,{
+        const response = await axios.put("https://rbac-app-9epa.onrender.com/api/v1/admin/edit-moderator" ,{
             email : email,
             role : role
         },
@@ -142,7 +142,7 @@ function AdminDashboard() {
     try{
         const token = localStorage.getItem("token");
 
-        const response = await axios.post("http://localhost:3000/api/v1/admin/create-notice", {
+        const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/admin/create-notice", {
             title : title,
             content : body
         },{

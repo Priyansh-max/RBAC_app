@@ -21,11 +21,11 @@ function UserDashboard(){
                     return;
                 }
 
-                const noticesResponse = await axios.get("http://localhost:3000/api/v1/users/notices", {
+                const noticesResponse = await axios.get("https://rbac-app-9epa.onrender.com/api/v1/users/notices", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                const userResponse = await axios.get("http://localhost:3000/api/v1/users/userdata", {
+                const userResponse = await axios.get("https://rbac-app-9epa.onrender.com/api/v1/users/userdata", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

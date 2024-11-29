@@ -24,7 +24,7 @@ function Login(){
         else{
             setError({})
             try{
-                const response = await axios.post("http://localhost:3000/api/v1/login", {
+                const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/login", {
                     email,
                     password
                 }) 

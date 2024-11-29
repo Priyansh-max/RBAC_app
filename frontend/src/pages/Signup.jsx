@@ -47,7 +47,7 @@ function Signup(){
         setIsLoading(true);
     
         try {
-            const response = await axios.post("http://localhost:3000/api/v1/signup", {
+            const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/signup", {
                 email: Email,
                 password,
                 firstname,
@@ -77,7 +77,7 @@ function Signup(){
             setIsOverlayVisible(true)
             setError({})
             try{
-                const response = await axios.post("http://localhost:3000/api/v1//send-verification-email" , {
+                const response = await axios.post("https://rbac-app-9epa.onrender.com/send-verification-email" , {
                     email : Email
                 })
 
@@ -118,7 +118,7 @@ function Signup(){
         try {
             console.log(Email);
             console.log(OTP);
-            const response = await axios.post("http://localhost:3000/api/v1/verify-code", {
+            const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/verify-code", {
                 email: Email,
                 code: OTP,
             });
