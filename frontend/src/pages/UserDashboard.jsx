@@ -12,7 +12,6 @@ function UserDashboard(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("wqfuwqgfiuqwuqwb")
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem("token");
@@ -58,7 +57,7 @@ function UserDashboard(){
         <Topbar userdata={userData} Role="USER"/>
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg p-6">
-            <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {userData.firstname}  {userData.lastname}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Welcome back 👋, {userData.firstname}  {userData.lastname}</h1>
             <p className="mt-2 text-gray-600">All the notices from the admin will be displayed here.</p>
           </div>
           <div className="mt-6 bg-white shadow rounded-lg p-6">

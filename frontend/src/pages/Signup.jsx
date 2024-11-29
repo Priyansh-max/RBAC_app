@@ -35,7 +35,7 @@ function Signup(){
         if (!isVerified || password !== confirmpassword || !isChecked) {
             const errorMessages = {
                 checked: !isChecked ? "Please agree to the terms and condition*" : "",
-                verified: !isVerified ? "Please verify your email*" : "",
+                verified: !isVerified ? "Please verify your email by clicking on the ! mark*" : "",
                 mismatch: password !== confirmpassword ? "Password and confirm password must be same*" : "",
             };
     

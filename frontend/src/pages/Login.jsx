@@ -39,16 +39,13 @@ function Login(){
                         navigate("/admindashboard")
                     }
                 }
-    
-                else{
-                    setError({message : response.data.error})
-                }
+
     
             }catch(error){
                 if (error.response && error.response.data.message) {
                     setError({ message: error.response.data.message });
                 } else {
-                    setError({ message: "Something went wrong. Please try again later." });
+                    setError({ message: "Something went wrong. Please try again" });
                 }
             }
         }       
@@ -102,6 +99,7 @@ function Login(){
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
+                                checked={true}
                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
                                 <label
@@ -114,7 +112,7 @@ function Login(){
 
                             <div className="text-sm">
                                 <a
-                                href="#"
+                                href="/underdevelopment"
                                 className="font-medium text-blue-600 hover:text-blue-500"
                                 >
                                 Forgot your password?

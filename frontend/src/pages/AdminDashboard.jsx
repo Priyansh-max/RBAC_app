@@ -9,7 +9,6 @@ import NoticesList from '../components/NoticeList';
 import UsersList from '../components/UserList';
 
 function AdminDashboard() {
-    console.log("Component rendered");
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const [isOverlayModerator, setIsOverlayModerator] = useState(false);
     const [title, setTitle] = useState('');
@@ -20,10 +19,11 @@ function AdminDashboard() {
     const navigate = useNavigate();
     const [notices, setNotices] = useState([]);
     const [userData, setUserData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [errors , setErrors] = useState(null);
     const [allUsers , setAllUsers] = useState([]);
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +56,7 @@ function AdminDashboard() {
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                setError(error.response?.data?.error || "Failed to fetch data.");
+                setErrors(error.response?.data?.error || "Failed to fetch data.");
                 setIsLoading(false);
             }
         };
@@ -162,19 +162,26 @@ function AdminDashboard() {
     }
   };
 
+  if (isLoading) {
+      return <div>Loading...</div>;
+  }
+
+  if (errors) {
+      return <div>Error: {errors}</div>;
+  }
+
+
 
   return (
 
 
     <div className="flex min-h-screen bg-gray-50">
-      {/* Pass setSidebarExpanded and handleContentChange functions to Sidebar */}
       <Sidebar 
         setSidebarExpanded={setIsSidebarExpanded} 
         onContentChange={handleContentChange} 
         
       />
 
-      {/* Main content will shift based on the sidebar state */}
       <div
         className={`flex-1 transition-all duration-300 ${
           isSidebarExpanded ? 'ml-64' : 'ml-16'
@@ -189,32 +196,18 @@ function AdminDashboard() {
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg p-6">
           <div>
-              <h1 className="text-2xl font-semibold text-gray-900">Welcome Admin, John!</h1>
-              <p className="mt-2 text-gray-600">This is your dashboard content.</p>
+              <h1 className="text-2xl font-semibold text-gray-900">Welcome 👋 ,{userData.firstname} {userData.lastname}</h1>
+              <p className="mt-2 text-gray-600">This is admin dashboard, navigate on the side bar to view records</p>
             </div>
 
-            {/* Content div that changes dynamically */}
             <div className="mt-6">
               {selectedContent === 'notices' && (
-                // <div className="bg-white shadow rounded-lg p-6">
-                //   <h2 className="text-xl font-semibold">Your Notices</h2>
-                //   <p>Here are the latest notices for the admin.</p>
-                //   {/* You can replace this with dynamic data later */}
-                // </div>
                 <NoticesList notices={notices} />
               )}
 
               {selectedContent === 'users' && (
-                // <div className="bg-white shadow rounded-lg p-6">
-                //   <h2 className="text-xl font-semibold">User Data</h2>
-                //   <p>List of users will appear here.</p>
-                //   {/* Replace this with the actual user data */}
-
-                // </div>
                 <UsersList users={allUsers} />
               )}
-
-              {/* Add more sections as needed */}
             </div>
           </div>
         </main>
@@ -225,12 +218,11 @@ function AdminDashboard() {
           className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
           onClick={handleCloseOverlay}
         >
-          {/* Prevent closing when clicking inside the form */}
+
           <div
             className="bg-white p-6 rounded-lg w-96 shadow-lg relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={handleCloseOverlay}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
@@ -283,12 +275,10 @@ function AdminDashboard() {
           className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
           onClick={handleCloseModerator}
         >
-          {/* Prevent closing when clicking inside the form */}
           <div
             className="bg-white p-6 rounded-lg w-96 shadow-lg relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={handleCloseModerator}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
