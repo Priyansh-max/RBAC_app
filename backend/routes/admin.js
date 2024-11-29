@@ -8,7 +8,7 @@ const app = express();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-router.post('/create_notice' , authmiddleware , async(req , res) => {
+router.post('/create-notice' , authmiddleware , async(req , res) => {
     try{
         const { title , content } = req.body;
 
@@ -31,7 +31,7 @@ router.post('/create_notice' , authmiddleware , async(req , res) => {
         })
 
         res.status(201).json({
-            message : "Notice sent successfully",
+            message : "Notice created successfully",
             Notice : {
                 id: newNotice.id,
                 title: newNotice.title,
@@ -44,7 +44,7 @@ router.post('/create_notice' , authmiddleware , async(req , res) => {
     }
 })
 
-router.put('/edit_moderator' , authmiddleware , async(req , res) => {
+router.put('/edit-moderator' , authmiddleware , async(req , res) => {
     try{   
         const {email , role } = req.body
 
@@ -58,12 +58,12 @@ router.put('/edit_moderator' , authmiddleware , async(req , res) => {
             where : {id : userid}
         })
 
-        if(user.role != "ADMIN"){
-            return res.status(404).json({ error: 'unauthorised'});
+        if(!Normaluser){
+            return res.status(404).json({ error: 'The email you entered does not exist'});
         }
 
-        if(!user){
-            return res.status(404).json({ error: 'User not found.' });
+        if(user.role != "ADMIN"){
+            return res.status(404).json({ error: 'unauthorised'});
         }
 
         const newRole = await prisma.user.update({
@@ -86,7 +86,7 @@ router.put('/edit_moderator' , authmiddleware , async(req , res) => {
 })
 
 
-router.get("/user_data", authmiddleware, async (req, res) => {
+router.get("/user-data", authmiddleware, async (req, res) => {
     try {
         const users = await prisma.user.findMany({
             select: {
@@ -104,26 +104,6 @@ router.get("/user_data", authmiddleware, async (req, res) => {
     } catch (error) {
         console.error("Error fetching users:", error);
         res.status(500).json({ error: "Failed to fetch user data." });
-    }
-});
-
-    
-router.get("/notice", authmiddleware, async (req, res) => {
-    try {
-        const notices = await prisma.notice.findMany({
-            select: {
-                id: true,
-                title: true,
-                content: true,
-                createdAt: true,
-                userId : true
-            },
-        });
-
-        res.status(200).json({ notices });
-    } catch (error) {
-        console.error("Error fetching notices:", error);
-        res.status(500).json({ error: "Failed to fetch notices." });
     }
 });
 

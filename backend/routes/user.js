@@ -2,10 +2,13 @@ const express = require('express')
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const authmiddleware = require('../middleware/authmiddleware');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 
 const app = express();
 
-router.put('/edit_profile' , authmiddleware , async(req , res) => {
+router.put('/edit-profile' , authmiddleware , async(req , res) => {
     try{
         const { firstname, lastname } = req.body;
         const userId = req.userid;
@@ -59,7 +62,7 @@ router.get('/userdata', authmiddleware, async (req, res) => {
         }
 
         res.status(200).json({ user });
-        
+
     } catch (error) {
         console.error("Error fetching user data:", error);
         res.status(500).json({ error: 'Failed to fetch user data.' });
@@ -67,7 +70,7 @@ router.get('/userdata', authmiddleware, async (req, res) => {
 });
 
 
-router.get('/notices', async (req, res) => {
+router.get('/notices', authmiddleware , async (req, res) => {
     try {
         const notices = await prisma.notice.findMany({
             select: {
@@ -87,9 +90,5 @@ router.get('/notices', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-
-
-
 
 module.exports = router;
