@@ -85,7 +85,6 @@ router.put('/edit-moderator' , authmiddleware , async(req , res) => {
     }
 })
 
-
 router.get("/user-data", authmiddleware, async (req, res) => {
     try {
         const users = await prisma.user.findMany({
