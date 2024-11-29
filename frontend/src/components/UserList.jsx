@@ -9,7 +9,7 @@ const UsersList = ({ users }) => {
       {users.length === 0 ? (
         <p className="text-gray-500">No users available.</p>
       ) : (
-        <div className="overflow-auto max-h-fit border rounded-lg shadow-md">
+        <div className="overflow-auto max-h-96 border rounded-lg shadow-md">
           <table className="min-w-full table-auto border-collapse">
             <thead>
               <tr>
