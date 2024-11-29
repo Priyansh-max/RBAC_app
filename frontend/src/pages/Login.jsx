@@ -23,6 +23,7 @@ function Login(){
         }
         else{
             setError({})
+            setIsLoading(true)
             try{
                 const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/login", {
                     email,
@@ -47,6 +48,8 @@ function Login(){
                 } else {
                     setError({ message: "Something went wrong. Please try again" });
                 }
+            }finally {
+                setIsLoading(false);
             }
         }       
     }
@@ -121,7 +124,7 @@ function Login(){
                         </div>
 
                         <Button
-                            text="Submit"
+                            text={isLoading ? "Logging in..." : "Login"}
                             className="w-full"
                             isLoading={isLoading}
                             onClick={handleSubmit}

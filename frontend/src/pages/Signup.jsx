@@ -245,7 +245,7 @@ function Signup(){
                         {Error.checked && <p className="italic text-red-500 text-xs">{Error.checked}</p>}
 
                         <Button
-                        text="Submit"
+                        text={isLoading ? "Registering..." : "Register"}
                         onClick={handleSubmit}
                         className="w-full"
                         isLoading={isLoading}

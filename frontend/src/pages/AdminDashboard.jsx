@@ -24,6 +24,8 @@ function AdminDashboard() {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [successMessageNotice, setSuccessMessageNotice] = useState("");
+    const [successMessageMod, setSuccessMessageMod] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,7 +54,6 @@ function AdminDashboard() {
                 setUserData(userResponse.data.user);
                 setAllUsers(allUserResponse.data.users);
     
-                console.log(userResponse.data.user);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -99,6 +100,7 @@ function AdminDashboard() {
     }
 
     setError({})
+    setIsLoading(true);
 
     try{
 
@@ -113,6 +115,7 @@ function AdminDashboard() {
         })
 
         if(response.status == 201){
+            setSuccessMessageMod("Success")
             setIsOverlayModerator(false);
         }
     }
@@ -122,9 +125,11 @@ function AdminDashboard() {
         } else {
             setError({ message: "Something went wrong. Please try again later." });
         }
-
+    }finally {
+      setIsLoading(false);  // Reset loading state after the request finishes
     }
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -138,6 +143,7 @@ function AdminDashboard() {
     }
 
     setError({})
+    setIsLoading(true)
 
     try{
         const token = localStorage.getItem("token");
@@ -150,6 +156,7 @@ function AdminDashboard() {
         })
 
         if(response.status == 201){
+            setSuccessMessageNotice("Success")
             setIsOverlayVisible(false);
         }
 
@@ -159,6 +166,8 @@ function AdminDashboard() {
         } else {
             setError({ message: "Something went wrong. Please try again later." });
         }
+    }finally {
+      setIsLoading(false);  // Reset loading state after the request finishes
     }
   };
 
@@ -170,10 +179,7 @@ function AdminDashboard() {
       return <div>Error: {errors}</div>;
   }
 
-
-
   return (
-
 
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar 
@@ -260,11 +266,10 @@ function AdminDashboard() {
                 type="submit"
                 className="w-full px-4 py-2 bg-blue-500 text-white rounded"
               >
-                Send Notice
+                {isLoading ? "Sending..." : "Send Notice"}
               </button>
-
-
             </form>
+            {successMessageNotice && <p className="text-green-600">{successMessageNotice}</p>}
           </div>
         </div>
       )}
@@ -322,11 +327,12 @@ function AdminDashboard() {
                 onClick={handleSubmitRoles}
                 className="w-full px-4 py-2 bg-blue-500 text-white rounded"
                 >
-                Submit
+                  {isLoading ? "Making changes..." : "Make Changes"}
                 </button>
 
                 {Error.message && <p className="mt-2 text-red-500 text-sm">{Error.message}</p>}
             </form>
+            {successMessageMod && <p className="text-green-600">{successMessageMod}</p>}
           </div>
         </div>
       )}
