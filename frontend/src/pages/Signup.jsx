@@ -32,11 +32,15 @@ function Signup(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isVerified || password !== confirmpassword || !isChecked) {
+        if (!isVerified || password !== confirmpassword || !isChecked || password === "" || confirmpassword === "" || firstname === "" || lastname === "") {
             const errorMessages = {
                 checked: !isChecked ? "Please agree to the terms and condition*" : "",
                 verified: !isVerified ? "Please verify your email by clicking on the ! mark*" : "",
                 mismatch: password !== confirmpassword ? "Password and confirm password must be same*" : "",
+                password : password === "" ? "Password field is must*" : "",
+                confirmpassword : confirmpassword === "" ? "Confirmpassword field is must*" : "",
+                firstname : firstname === "" ? "Enter your firstname*" : "",
+                lastname : lastname === "" ? "Enter your lastname*" : "",
             };
     
             setError(errorMessages);
@@ -60,9 +64,8 @@ function Signup(){
                 navigate("/userdashboard");
             }
         } catch (error) {
-            const apiError = error.response?.data?.message || "Something went wrong. Please try again.";
+            const apiError = error.response?.data?.error || "Something went wrong. Please try again.";
             setError({ fault : apiError });
-            console.log("API error: ", apiError);
         } finally {
             setIsLoading(false); 
         }
@@ -77,7 +80,7 @@ function Signup(){
             setIsOverlayVisible(true)
             setError({})
             try{
-                const response = await axios.post("https://rbac-app-9epa.onrender.com/send-verification-email" , {
+                const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/send-verification-email" , {
                     email : Email
                 })
 
@@ -105,7 +108,6 @@ function Signup(){
 
       const handleOtpSubmit = async (e) => {
         e.preventDefault();
-        console.log(OTP);
         
         // Check if OTP is empty
         if (OTP === "") {
@@ -116,8 +118,6 @@ function Signup(){
         setError({}); 
         
         try {
-            console.log(Email);
-            console.log(OTP);
             const response = await axios.post("https://rbac-app-9epa.onrender.com/api/v1/verify-code", {
                 email: Email,
                 code: OTP,
@@ -129,13 +129,10 @@ function Signup(){
                 setIsOverlayVisible(false);
             }
         } catch (error) {
-            if (error.response && error.response.data.message) {
-                setError({ message: error.response.data.message });
-            } else {
-                setError({ message: "Something went wrong. Please try again later." });
-            }
+            const apiError = error.response?.data?.error || "Something went wrong. Please try again.";
+            setError({ message : apiError });
         } finally {
-            setIsLoading(false);  // Reset loading state after the request finishes
+            setIsLoading(false); 
         }
     };
     
@@ -167,6 +164,7 @@ function Signup(){
                         <InputField
                             text="First name"
                             type="text"
+                            error={Error.firstname}
                             onChange={(e) => setFirstname(e.target.value)}
                             required
                             inputplaceholder="Priyansh"
@@ -174,6 +172,7 @@ function Signup(){
                         <InputField
                             text="Last name"
                             type="text"
+                            error={Error.lastname}
                             onChange={(e) => setLastname(e.target.value)}
                             required
                             inputplaceholder="Agarwal"
@@ -195,8 +194,8 @@ function Signup(){
                         <InputField
                             text="Password"
                             type="password"
+                            error={Error.password}
                             onChange={(e) => setPassword(e.target.value)}
-                            error={Error.mismatch}
                             required
                             inputplaceholder="Create a strong password"
                         />
@@ -205,7 +204,7 @@ function Signup(){
                             text="Confirm Password"
                             type="password"
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            error={Error.mismatch}
+                            error={Error.confirmpassword}
                             required
                             inputplaceholder="Confirm your password"
                         />
@@ -252,6 +251,7 @@ function Signup(){
                         >
                         </Button>
                         {Error.verified && <p className="italic text-center text-red-500 text-xs mt-1">{Error.verified}</p>}
+                        {Error.mismatch && <p className="italic text-center text-red-500 text-xs mt-1">{Error.mismatch}</p>}
                         {Error.fault && <p className="italic text-center text-red-500 text-xs mt-1">{Error.fault}</p>}
                     </form>
                 </div>
@@ -301,7 +301,7 @@ function Signup(){
                             >
                                 Submit
                             </button>
-                            {Error.OTP && <p className="italic text-center text-red-500 text-xs mt-1">{Error.OTP}</p>}
+                            {Error.message && <p className="italic text-center text-red-500 text-xs mt-1">{Error.message}</p>}
                         </form>
                     </div>
                 </div>
