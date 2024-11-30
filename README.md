@@ -1,6 +1,6 @@
 # NoticeBoard - Full-Stack RBAC Application
 
-## [View the deployed app here](https://noticeboards.netlify.app/)
+## [View the deployed app here](https://noticeboard0.netlify.app/login)
 
 ## admin account
 email - priyanshagarwal3381@gmail.com
