@@ -7,6 +7,7 @@ import { FaTimes } from 'react-icons/fa'
 import axios from "axios"
 import NoticesList from '../components/NoticeList';
 import UsersList from '../components/UserList';
+import Swal from 'sweetalert2';
 
 function AdminDashboard() {
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -65,9 +66,26 @@ function AdminDashboard() {
         fetchData();
     }, [navigate]); 
 
+    const handleUnauthorized = () => {
+      Swal.fire({
+        title: 'Unauthorized!',
+        text: 'You do not have permission to access this page.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        background: '#f8d7da', // Light red background
+        timer: 5000,  // Optional timer before auto-close (in ms)
+      });
+    };
+
 //---------------------edit moderator overlay----------------------------------
   const handleClickEditModerator = () => {
-    setIsOverlayModerator(true);
+    if(userData.role === "MODERATOR"){
+      handleUnauthorized();
+      setIsOverlayModerator(false);
+    }
+    else{
+      setIsOverlayModerator(true);
+    }
   }
 
   const handleCloseModerator = () => {
@@ -80,7 +98,13 @@ function AdminDashboard() {
 
 //----------------- Notice publish overlay ------------------------------------
   const handleSendNoticeClick = () => {
-    setIsOverlayVisible(true);
+    if(userData.role === "MODERATOR"){
+      handleUnauthorized();
+      setIsOverlayVisible(false);
+    }
+    else{
+      setIsOverlayVisible(true);
+    }
   };
 
   const handleCloseOverlay = () => {
